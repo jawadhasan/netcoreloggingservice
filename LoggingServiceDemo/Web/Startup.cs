@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Web.CoreLogging;
 
 namespace Web
 {
@@ -25,6 +26,8 @@ namespace Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddMvc(options => options.Filters.Add(new TrackPerformanceFilter("NetCoreLogger.Web", "WebApi")));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,6 +37,8 @@ namespace Web
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseMiddleware<ExceptionHandler>();
+
 
             app.UseRouting();
 
