@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,14 @@ namespace Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddOptions<LogConfiguration>("LogConfiguration");
+            //services.Configure<LogConfiguration>(Configuration.GetSection("LogConfiguration"));
+            //services.AddSingleton<LogConfiguration>();
+
+            var config = new LogConfiguration();
+            Configuration.Bind("LogConfiguration", config);   
+            services.AddSingleton(config);
+
             services.AddControllers();
             services.AddMvc(options => options.Filters.Add(new TrackPerformanceFilter("NetCoreLogger.Web", "WebApi")));
 

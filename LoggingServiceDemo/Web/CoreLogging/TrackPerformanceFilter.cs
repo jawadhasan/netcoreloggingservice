@@ -37,9 +37,6 @@ namespace Web.CoreLogging
             if (_tracker != null)
             {
                 _tracker.Stop();
-               var infoToLog = _tracker.GetInfoToLog();
-               //TODO: Messaging to do.
-               
             }
         }
     }

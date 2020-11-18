@@ -4,27 +4,33 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Common;
 using Common.Logging;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
+using NATS.Client;
 
 namespace Web.CoreLogging
 {
     public class WebHelper
     {
+      
         public static void LogWebError(string product, string layer, Exception ex, HttpContext context)
         {
             var details = GetWebLogDetail(product, layer, null, context, null);
             details.Exception = ex;
+            details.LogType = LogTypes.Error;
 
-            //TODO: Messaging Code
-            //AppLogger.WriteError(details);
+            LogMsgPublisher.PublishMessage(details);
         }
 
         public static void LogWebUsage(string product, string layer, string activityName, HttpContext context,
             Dictionary<string, object> additionalInfo = null)
         {
             var details = GetWebLogDetail(product, layer, activityName, context, additionalInfo);
-            //AppLogger.WriteUsage(details);
+            details.LogType = LogTypes.Usage;
+            LogMsgPublisher.PublishMessage(details);
+
         }
 
 
@@ -32,7 +38,9 @@ namespace Web.CoreLogging
             Dictionary<string, object> diagnosticInfo = null)
         {
             var details = GetWebLogDetail(product, layer, message, context, diagnosticInfo);
-            //AppLogger.WriteDiagnostic(details);
+            details.LogType = LogTypes.Diagnostic;
+            LogMsgPublisher.PublishMessage(details);
+
         }
 
 
@@ -103,5 +111,6 @@ namespace Web.CoreLogging
             }
         }
 
+        
     }
 }

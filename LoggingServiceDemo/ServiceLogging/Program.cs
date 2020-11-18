@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -18,6 +20,10 @@ namespace ServiceLogging
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
+                    var config = new LogConfiguration();
+                    hostContext.Configuration.Bind("LogConfiguration", config);
+                    services.AddSingleton(config);
+
                     services.AddHostedService<Worker>();
                 });
     }

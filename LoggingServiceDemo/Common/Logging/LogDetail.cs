@@ -4,14 +4,25 @@ using System.Text;
 
 namespace Common.Logging
 {
+    public enum LogTypes
+    {
+        Performance,
+        Usage,
+        Error,
+        Diagnostic
+
+    }
     public class LogDetail
     {
         public LogDetail()
         {
             Timestamp = DateTime.Now;
+            AdditionalInfo = new Dictionary<string, object>();
         }
+
         public DateTime Timestamp { get; set; }
         public string Message { get; set; }
+        public LogTypes LogType { get; set; }
 
         //WHERE
         public string Product { get; set; }
